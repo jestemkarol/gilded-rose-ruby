@@ -88,27 +88,14 @@ end
 class GildedRose
   class GoodCategory
     def build_for(item)
-      if aged_brie?(item)
+      case item.name
+      when "Aged Brie"
         Inventory::AgedBrie.new(item.quality, item.sell_in)
-      elsif backstage_passes?(item)
+      when "Backstage passes to a TAFKAL80ETC concert"
         Inventory::BackstagePass.new(item.quality, item.sell_in)
-      elsif generic?(item)
+      else
         Inventory::GenericItem.new(item.quality, item.sell_in)
       end
-    end
-
-    private
-
-    def generic?(item)
-      [aged_brie?(item), backstage_passes?(item)].none?
-    end
-  
-    def aged_brie?(item)
-      item.name == "Aged Brie"
-    end
-  
-    def backstage_passes?(item)
-      item.name == "Backstage passes to a TAFKAL80ETC concert"
     end
   end
 
