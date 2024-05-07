@@ -25,7 +25,8 @@ module Inventory
   end
 
   class GenericItem
-    attr_reader :quality, :sell_in
+    attr_reader :sell_in
+
     def initialize(quality, sell_in)
       @quality = Quality.new(quality)
       @sell_in = sell_in
@@ -37,9 +38,7 @@ module Inventory
 
     def update
       @quality.degrade
-      if @sell_in < 0
-        @quality.degrade
-      end
+      @quality.degrade if sell_in < 0
     end
   end
 

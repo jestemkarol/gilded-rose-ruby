@@ -90,15 +90,19 @@ end
 
 describe Inventory::GenericItem do
   let(:items) do
-    [
-      Item.new("foo", 0, 0),
-      Item.new("foo", 0, 20)
-    ]
+    {
+      Item.new("foo", 0, 0) => 0,
+      Item.new("foo", 0, 20) => 18,
+      Item.new("foo", 1, 20) => 19,
+    }
   end
 
-  it 'returns expected generic items quality' do
-    GildedRose.new(items).update_quality
-    expect(items.map(&:quality)).to eq [0, 18]
+  it 'returns expected aged brie quality' do
+    gilded_rose = GildedRose.new(items.keys)
+    gilded_rose.update_quality
+    items.each do |item, expected_quality|
+      expect(item.quality).to eq expected_quality
+    end
   end
 end
 
