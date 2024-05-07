@@ -72,14 +72,19 @@ end
 
 describe Inventory::AgedBrie do
   let(:items) do
-    [
-      Item.new("Aged Brie", 0, 20)
-    ]
+    {
+      Item.new("Aged Brie", 0, 20) => 22,
+      Item.new("Aged Brie", 1, 20) => 22,
+      Item.new("Aged Brie", 2, 20) => 21
+    }
   end
 
   it 'returns expected aged brie quality' do
-    GildedRose.new(items).update_quality
-    expect(items.map(&:quality)).to eq [22]
+    gilded_rose = GildedRose.new(items.keys)
+    gilded_rose.update_quality
+    items.each do |item, expected_quality|
+      expect(item.quality).to eq expected_quality
+    end
   end
 end
 
