@@ -41,46 +41,59 @@ describe GildedRose do
 
     expect(report_lines).to eq ["-------- day 0 --------", "name, sellIn, quality", "+5 Dexterity Vest, 10, 20", "Aged Brie, 2, 0", "Elixir of the Mongoose, 5, 7", "Sulfuras, Hand of Ragnaros, 0, 80", "Sulfuras, Hand of Ragnaros, -1, 80", "Backstage passes to a TAFKAL80ETC concert, 15, 20", "Backstage passes to a TAFKAL80ETC concert, 10, 49", "Backstage passes to a TAFKAL80ETC concert, 5, 49", "Conjured Mana Cake, 3, 6", "", "-------- day 1 --------", "name, sellIn, quality", "+5 Dexterity Vest, 9, 19", "Aged Brie, 1, 1", "Elixir of the Mongoose, 4, 6", "Sulfuras, Hand of Ragnaros, 0, 80", "Sulfuras, Hand of Ragnaros, -1, 80", "Backstage passes to a TAFKAL80ETC concert, 14, 21", "Backstage passes to a TAFKAL80ETC concert, 9, 50", "Backstage passes to a TAFKAL80ETC concert, 4, 50", "Conjured Mana Cake, 2, 5", ""]
   end
+end
 
-  describe 'Backstage passes to a TAFKAL80ETC concert scenarios' do
-    let(:items) do 
-      [
-        Item.new("Backstage passes to a TAFKAL80ETC concert", 8, 20),
-        Item.new("Backstage passes to a TAFKAL80ETC concert", 4, 20),
-        Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 20)
-      ]
-    end
-
-    it 'returns expected backstage passes quality' do
-      GildedRose.new(items).update_quality
-      expect(items.map(&:quality)).to eq [22, 23, 0]
-    end
+describe Inventory::BackstagePass do
+  let(:items) do 
+    {
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 8, 20) => 22,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 4, 20) => 23,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 20) => 0,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 1, 20) => 0,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", -1, 20) => 0,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 2, 20) => 23,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 6, 20) => 23,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 20) => 23,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 20) => 22,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 20) => 22,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 7, 20) => 22,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 12, 20) => 21,
+    }
   end
-
-  describe 'Aged Brie scenarios' do
-    let(:items) do
-      [
-        Item.new("Aged Brie", 0, 20)
-      ]
-    end
-
-    it 'returns expected aged brie quality' do
-      GildedRose.new(items).update_quality
-      expect(items.map(&:quality)).to eq [22]
-    end
-  end
-
-  describe 'Generic items scenarios' do
-    let(:items) do
-      [
-        Item.new("foo", 0, 0),
-        Item.new("foo", 0, 20)
-      ]
-    end
-
-    it 'returns expected generic items quality' do
-      GildedRose.new(items).update_quality
-      expect(items.map(&:quality)).to eq [0, 18]
+  
+  it 'returns expected backstage passes quality' do
+    gilded_rose = GildedRose.new(items.keys)
+    gilded_rose.update_quality
+    items.each do |item, expected_quality|
+      expect(item.quality).to eq expected_quality
     end
   end
 end
+
+describe Inventory::AgedBrie do
+  let(:items) do
+    [
+      Item.new("Aged Brie", 0, 20)
+    ]
+  end
+
+  it 'returns expected aged brie quality' do
+    GildedRose.new(items).update_quality
+    expect(items.map(&:quality)).to eq [22]
+  end
+end
+
+describe Inventory::GenericItem do
+  let(:items) do
+    [
+      Item.new("foo", 0, 0),
+      Item.new("foo", 0, 20)
+    ]
+  end
+
+  it 'returns expected generic items quality' do
+    GildedRose.new(items).update_quality
+    expect(items.map(&:quality)).to eq [0, 18]
+  end
+end
+
