@@ -75,7 +75,8 @@ describe Inventory::AgedBrie do
     {
       Item.new("Aged Brie", 0, 20) => 22,
       Item.new("Aged Brie", 1, 20) => 22,
-      Item.new("Aged Brie", 2, 20) => 21
+      Item.new("Aged Brie", 2, 20) => 21,
+      Item.new("Aged Brie", 1, 49) => 50,
     }
   end
 
@@ -94,6 +95,8 @@ describe Inventory::GenericItem do
       Item.new("foo", 0, 0) => 0,
       Item.new("foo", 0, 20) => 18,
       Item.new("foo", 1, 20) => 19,
+      Item.new("foo", 1, 0) => 0,
+      Item.new("foo", -1, 1) => 0,
     }
   end
 
