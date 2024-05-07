@@ -8,35 +8,11 @@ class GildedRose
     @items.each do |item|
       if sulfuras?(item)
       elsif generic?(item)
-        if item.quality > 0
-          decrease_quality(item)
-        end
+        handle_generic(item)
       elsif aged_brie?(item)
-        if quality_below_50?(item)
-          increate_quality(item)
-        end
+        handle_aged_brie(item)
       elsif backstage_passes?(item)
         handle_backstage_passes(item)
-      end
-      if ! sulfuras?(item)
-        item.sell_in = item.sell_in - 1
-      end
-      if item.sell_in < 0
-        if ! aged_brie?(item)
-          if ! backstage_passes?(item)
-            if item.quality > 0
-              if ! sulfuras?(item)
-                decrease_quality(item)
-              end
-            end
-          else
-            item.quality = item.quality - item.quality
-          end
-        else
-          if quality_below_50?(item)
-            increate_quality(item)
-          end
-        end
       end
     end
   end
@@ -55,6 +31,30 @@ class GildedRose
     item.quality < 50
   end
 
+  def handle_generic(item)
+    if item.quality > 0
+      decrease_quality(item)
+    end
+    item.sell_in = item.sell_in - 1
+    if item.sell_in < 0
+      if item.quality > 0
+        decrease_quality(item)
+      end
+    end
+  end
+
+  def handle_aged_brie(item)
+    if quality_below_50?(item)
+      increate_quality(item)
+    end
+    item.sell_in = item.sell_in - 1
+    if item.sell_in < 0
+      if quality_below_50?(item)
+        increate_quality(item)
+      end
+    end
+  end
+
   def handle_backstage_passes(item)
     if quality_below_50?(item)
       increate_quality(item)
@@ -68,6 +68,10 @@ class GildedRose
           increate_quality(item)
         end
       end
+    end
+    item.sell_in = item.sell_in - 1
+    if item.sell_in < 0
+      item.quality = item.quality - item.quality
     end
   end
 
