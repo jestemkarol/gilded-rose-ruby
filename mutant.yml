@@ -1,6 +1,6 @@
 ---
 includes:
-- ./gilded_rose.rb
+- ./gilded_rose_spec.rb
 requires:
 - ./gilded_rose.rb
 usage: opensource
@@ -8,3 +8,4 @@ integration:
   name: rspec
   arguments:
     - gilded_rose_spec.rb
+fail_fast: false
