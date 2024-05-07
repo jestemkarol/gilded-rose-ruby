@@ -1,5 +1,4 @@
-class GildedRose
-
+module Inventory
   class GenericItem
     attr_reader :quality, :sell_in
     def initialize(quality, sell_in)
@@ -78,17 +77,19 @@ class GildedRose
     def update
     end
   end
+end
 
+class GildedRose
   class GoodCategory
     def build_for(item)
       if aged_brie?(item)
-        AgedBrie.new(item.quality, item.sell_in)
+        Inventory::AgedBrie.new(item.quality, item.sell_in)
       elsif backstage_passes?(item)
-        BackstagePass.new(item.quality, item.sell_in)
+        Inventory::BackstagePass.new(item.quality, item.sell_in)
       elsif sulfuras?(item)
-        Sulfuras.new(item.quality, item.sell_in)
+        Inventory::Sulfuras.new(item.quality, item.sell_in)
       elsif generic?(item)
-        GenericItem.new(item.quality, item.sell_in)
+        Inventory::GenericItem.new(item.quality, item.sell_in)
       end
     end
 
