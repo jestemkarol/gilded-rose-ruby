@@ -1,94 +1,127 @@
 class GildedRose
 
+  class GenericItem
+    attr_reader :quality, :sell_in
+    def initialize(quality, sell_in)
+      @quality = quality
+      @sell_in = sell_in
+    end
+
+    def update
+      if @quality > 0
+        @quality -= 1
+      end
+      @sell_in = @sell_in - 1
+      if @sell_in < 0
+        if @quality > 0
+          @quality -= 1
+        end
+      end
+    end
+  end
+
+  class AgedBrie
+    attr_reader :quality, :sell_in
+    def initialize(quality, sell_in)
+      @quality = quality
+      @sell_in = sell_in
+    end
+
+    def update
+      if @quality < 50
+        @quality += 1 
+      end
+      @sell_in = @sell_in - 1
+      if @sell_in < 0
+        if @quality < 50
+          @quality += 1 
+        end
+      end
+    end
+  end
+
+  class BackstagePass
+    attr_reader :quality, :sell_in
+    def initialize(quality, sell_in)
+      @quality = quality
+      @sell_in = sell_in
+    end
+
+    def update
+      if @quality < 50
+        @quality += 1 
+        if @sell_in < 11
+          if @quality < 50
+            @quality += 1 
+          end
+        end
+        if @sell_in < 6
+          if @quality < 50
+            @quality += 1 
+          end
+        end
+      end
+      @sell_in = @sell_in - 1
+      if @sell_in < 0
+        @quality = @quality - @quality
+      end
+    end
+  end
+
+  class Sulfuras
+    attr_reader :quality, :sell_in
+    def initialize(quality, sell_in)
+      @quality = quality
+      @sell_in = sell_in
+    end
+
+    def update
+    end
+  end
+
+  class GoodCategory
+    def build_for(item)
+      if aged_brie?(item)
+        AgedBrie.new(item.quality, item.sell_in)
+      elsif backstage_passes?(item)
+        BackstagePass.new(item.quality, item.sell_in)
+      elsif sulfuras?(item)
+        Sulfuras.new(item.quality, item.sell_in)
+      elsif generic?(item)
+        GenericItem.new(item.quality, item.sell_in)
+      end
+    end
+
+    private
+
+    def generic?(item)
+      [aged_brie?(item), backstage_passes?(item), sulfuras?(item)].none?
+    end
+  
+    def aged_brie?(item)
+      item.name == "Aged Brie"
+    end
+  
+    def backstage_passes?(item)
+      item.name == "Backstage passes to a TAFKAL80ETC concert"
+    end
+  
+    def sulfuras?(item)
+      item.name == "Sulfuras, Hand of Ragnaros"
+    end
+  end
+
   def initialize(items)
     @items = items
   end
 
   def update_quality
     @items.each do |item|
-      if sulfuras?(item)
-      elsif generic?(item)
-        handle_generic(item)
-      elsif aged_brie?(item)
-        handle_aged_brie(item)
-      elsif backstage_passes?(item)
-        handle_backstage_passes(item)
-      end
+      good = GoodCategory.new.build_for(item)
+      good.update
+      item.quality = good.quality
+      item.sell_in = good.sell_in
     end
-  end
-
-  private
-
-  def increate_quality(item)
-    item.quality += 1 
-  end
-
-  def decrease_quality(item)
-    item.quality -= 1
-  end
-
-  def quality_below_50?(item)
-    item.quality < 50
-  end
-
-  def handle_generic(item)
-    if item.quality > 0
-      decrease_quality(item)
-    end
-    item.sell_in = item.sell_in - 1
-    if item.sell_in < 0
-      if item.quality > 0
-        decrease_quality(item)
-      end
-    end
-  end
-
-  def handle_aged_brie(item)
-    if quality_below_50?(item)
-      increate_quality(item)
-    end
-    item.sell_in = item.sell_in - 1
-    if item.sell_in < 0
-      if quality_below_50?(item)
-        increate_quality(item)
-      end
-    end
-  end
-
-  def handle_backstage_passes(item)
-    if quality_below_50?(item)
-      increate_quality(item)
-      if item.sell_in < 11
-        if quality_below_50?(item)
-          increate_quality(item)
-        end
-      end
-      if item.sell_in < 6
-        if quality_below_50?(item)
-          increate_quality(item)
-        end
-      end
-    end
-    item.sell_in = item.sell_in - 1
-    if item.sell_in < 0
-      item.quality = item.quality - item.quality
-    end
-  end
-
-  def generic?(item)
-    [aged_brie?(item), backstage_passes?(item), sulfuras?(item)].none?
-  end
-
-  def aged_brie?(item)
-    item.name == "Aged Brie"
-  end
-
-  def backstage_passes?(item)
-    item.name == "Backstage passes to a TAFKAL80ETC concert"
-  end
-
-  def sulfuras?(item)
-    item.name == "Sulfuras, Hand of Ragnaros"
   end
 end
 
