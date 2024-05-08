@@ -39,7 +39,7 @@ describe GildedRose do
       gilded_rose.update_quality
     end
 
-    expect(report_lines).to eq ["-------- day 0 --------", "name, sellIn, quality", "+5 Dexterity Vest, 10, 20", "Aged Brie, 2, 0", "Elixir of the Mongoose, 5, 7", "Sulfuras, Hand of Ragnaros, 0, 80", "Sulfuras, Hand of Ragnaros, -1, 80", "Backstage passes to a TAFKAL80ETC concert, 15, 20", "Backstage passes to a TAFKAL80ETC concert, 10, 49", "Backstage passes to a TAFKAL80ETC concert, 5, 49", "Conjured Mana Cake, 3, 6", "", "-------- day 1 --------", "name, sellIn, quality", "+5 Dexterity Vest, 9, 19", "Aged Brie, 1, 1", "Elixir of the Mongoose, 4, 6", "Sulfuras, Hand of Ragnaros, 0, 80", "Sulfuras, Hand of Ragnaros, -1, 80", "Backstage passes to a TAFKAL80ETC concert, 14, 21", "Backstage passes to a TAFKAL80ETC concert, 9, 50", "Backstage passes to a TAFKAL80ETC concert, 4, 50", "Conjured Mana Cake, 2, 5", ""]
+    expect(report_lines).to eq ["-------- day 0 --------", "name, sellIn, quality", "+5 Dexterity Vest, 10, 20", "Aged Brie, 2, 0", "Elixir of the Mongoose, 5, 7", "Sulfuras, Hand of Ragnaros, 0, 80", "Sulfuras, Hand of Ragnaros, -1, 80", "Backstage passes to a TAFKAL80ETC concert, 15, 20", "Backstage passes to a TAFKAL80ETC concert, 10, 49", "Backstage passes to a TAFKAL80ETC concert, 5, 49", "Conjured Mana Cake, 3, 6", "", "-------- day 1 --------", "name, sellIn, quality", "+5 Dexterity Vest, 9, 19", "Aged Brie, 1, 1", "Elixir of the Mongoose, 4, 6", "Sulfuras, Hand of Ragnaros, 0, 80", "Sulfuras, Hand of Ragnaros, -1, 80", "Backstage passes to a TAFKAL80ETC concert, 14, 21", "Backstage passes to a TAFKAL80ETC concert, 9, 50", "Backstage passes to a TAFKAL80ETC concert, 4, 50", "Conjured Mana Cake, 2, 4", ""]
   end
 end
 
@@ -109,3 +109,23 @@ describe Inventory::GenericItem do
   end
 end
 
+describe Inventory::ConjuredItem do
+  let(:items) do
+    {
+      Item.new('Conjured Mana Cake', 0, 0) => 0,
+      Item.new('Conjured Mana Cake', 0, 20) => 16,
+      Item.new('Conjured Mana Cake', 1, 20) => 18,
+      Item.new('Conjured Mana Cake', 1, 0) => 0,
+      Item.new('Conjured Mana Cake', -1, 1) => 0,
+      Item.new('Conjured Mana Cake', 0, 4) => 0,
+    }
+  end
+
+  it 'returns expected aged brie quality' do
+    gilded_rose = GildedRose.new(items.keys)
+    gilded_rose.update_quality
+    items.each do |item, expected_quality|
+      expect(item.quality).to eq expected_quality
+    end
+  end
+end
