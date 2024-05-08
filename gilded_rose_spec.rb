@@ -49,12 +49,12 @@ describe Inventory::BackstagePass do
       Item.new("Backstage passes to a TAFKAL80ETC concert", 8, 20) => 22,
       Item.new("Backstage passes to a TAFKAL80ETC concert", 4, 20) => 23,
       Item.new("Backstage passes to a TAFKAL80ETC concert", 0, 20) => 0,
-      Item.new("Backstage passes to a TAFKAL80ETC concert", 1, 20) => 0,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 1, 20) => 23,
       Item.new("Backstage passes to a TAFKAL80ETC concert", -1, 20) => 0,
       Item.new("Backstage passes to a TAFKAL80ETC concert", 2, 20) => 23,
-      Item.new("Backstage passes to a TAFKAL80ETC concert", 6, 20) => 23,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 6, 20) => 22,
       Item.new("Backstage passes to a TAFKAL80ETC concert", 5, 20) => 23,
-      Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 20) => 22,
+      Item.new("Backstage passes to a TAFKAL80ETC concert", 11, 20) => 21,
       Item.new("Backstage passes to a TAFKAL80ETC concert", 10, 20) => 22,
       Item.new("Backstage passes to a TAFKAL80ETC concert", 7, 20) => 22,
       Item.new("Backstage passes to a TAFKAL80ETC concert", 12, 20) => 21,
@@ -74,7 +74,7 @@ describe Inventory::AgedBrie do
   let(:items) do
     {
       Item.new("Aged Brie", 0, 20) => 22,
-      Item.new("Aged Brie", 1, 20) => 22,
+      Item.new("Aged Brie", 1, 20) => 21,
       Item.new("Aged Brie", 2, 20) => 21,
       Item.new("Aged Brie", 1, 49) => 50,
     }

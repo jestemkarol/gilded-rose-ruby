@@ -52,7 +52,6 @@ module Inventory
 
     def update
       @quality.increase
-      @sell_in = sell_in - 1
       @quality.increase if sell_in < 0
     end
   end
@@ -71,13 +70,12 @@ module Inventory
 
     def update
       @quality.increase
-      if sell_in < 11
+      if sell_in < 10
         @quality.increase
       end
-      if sell_in < 6
+      if sell_in < 5
         @quality.increase
       end
-      @sell_in = sell_in - 1
       if sell_in < 0
         @quality.reset
       end
