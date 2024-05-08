@@ -21,54 +21,47 @@ module Inventory
   end
 
   class GenericItem
-    attr_reader :sell_in
 
-    def initialize(quality, sell_in)
+    def initialize(quality)
       @quality = Quality.new(quality)
-      @sell_in = sell_in
     end
 
     def quality
       @quality.amount
     end
 
-    def update
+    def update(sell_in)
       @quality.degrade
       @quality.degrade if sell_in < 0
     end
   end
 
   class AgedBrie
-    attr_reader :sell_in
 
-    def initialize(quality, sell_in)
+    def initialize(quality)
       @quality = Quality.new(quality)
-      @sell_in = sell_in
     end
 
     def quality
       @quality.amount
     end
 
-    def update
+    def update(sell_in)
       @quality.increase
       @quality.increase if sell_in < 0
     end
   end
 
   class BackstagePass
-    attr_reader :sell_in
-
-    def initialize(quality, sell_in)
+    def initialize(quality)
       @quality = Quality.new(quality)
-      @sell_in = sell_in
     end
 
     def quality
       @quality.amount
     end
 
-    def update
+    def update(sell_in)
       @quality.increase
       if sell_in < 10
         @quality.increase
@@ -88,11 +81,11 @@ class GildedRose
     def build_for(item)
       case item.name
       when "Aged Brie"
-        Inventory::AgedBrie.new(item.quality, item.sell_in)
+        Inventory::AgedBrie.new(item.quality)
       when "Backstage passes to a TAFKAL80ETC concert"
-        Inventory::BackstagePass.new(item.quality, item.sell_in)
+        Inventory::BackstagePass.new(item.quality)
       else
-        Inventory::GenericItem.new(item.quality, item.sell_in)
+        Inventory::GenericItem.new(item.quality)
       end
     end
   end
@@ -106,7 +99,7 @@ class GildedRose
       next if sulfuras?(item)
       item.sell_in -= 1
       good = GoodCategory.new.build_for(item)
-      good.update
+      good.update(item.sell_in)
       item.quality = good.quality
     end
   end
