@@ -30,13 +30,13 @@ module Inventory
     end
 
     class Expired
-      def update(quality, _)
+      def update(quality)
         quality.degrade
         quality.degrade
       end
     end
 
-    def update(quality, _)
+    def update(quality)
       quality.degrade
     end
   end
@@ -51,29 +51,54 @@ module Inventory
     end
 
     class Expired
-      def update(quality, _)
+      def update(quality)
         quality.increase
         quality.increase
       end
     end
 
-    def update(quality, _)
+    def update(quality)
       quality.increase
     end
   end
 
   class BackstagePass
-    def update(quality, sell_in)
-      quality.increase
-      if sell_in < 10
+    def self.build(sell_in)
+      case
+      when sell_in < 0
+        Expired.new
+      when sell_in < 5
+        LessThanFive.new
+      when sell_in < 10
+        LessThanTen.new
+      else
+        new
+      end
+    end
+
+    class LessThanFive
+      def update(quality)
+        quality.increase
+        quality.increase
         quality.increase
       end
-      if sell_in < 5
+    end
+
+    class LessThanTen
+      def update(quality)
+        quality.increase
         quality.increase
       end
-      if sell_in < 0
+    end
+
+    class Expired
+      def update(quality)
         quality.reset
       end
+    end
+
+    def update(quality)
+      quality.increase
     end
   end
 end
@@ -85,7 +110,7 @@ class GildedRose
       when "Aged Brie"
         Inventory::AgedBrie.build(item.sell_in)
       when "Backstage passes to a TAFKAL80ETC concert"
-        Inventory::BackstagePass.new
+        Inventory::BackstagePass.build(item.sell_in)
       else
         Inventory::GenericItem.build(item.sell_in)
       end
@@ -102,7 +127,7 @@ class GildedRose
       item.sell_in -= 1
       quality = Inventory::Quality.new(item.quality)
       good = GoodCategory.new.build_for(item)
-      good.update(quality, item.sell_in)
+      good.update(quality)
       item.quality = quality.amount
     end
   end
