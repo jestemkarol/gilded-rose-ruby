@@ -77,6 +77,7 @@ describe Inventory::AgedBrie do
       Item.new("Aged Brie", 1, 20) => 21,
       Item.new("Aged Brie", 2, 20) => 21,
       Item.new("Aged Brie", 1, 49) => 50,
+      Item.new("Aged Brie", 1, 50) => 50
     }
   end
 
